@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <!-- Section pour ajouter un utilisateur -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-transparent border-0 pt-4">
+            <h5 class="card-title">Ajouter un nouvel administrateur</h5>
+        </div>
+        <div class="card-body">
+            <form id="add-user-form">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="nom" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="nom" required autocomplete="off">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required autocomplete="off">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter l'utilisateur</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Section pour lister les utilisateurs existants -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Utilisateurs existants</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom d'utilisateur</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <!-- Le corps du tableau sera rempli dynamiquement par JavaScript -->
+                    <tbody id="users-table-body">
+                        <tr>
+                            <td colspan="3" class="text-center">Chargement...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addUserForm = document.getElementById('add-user-form');
+        const usersTableBody = document.getElementById('users-table-body');
+
+        // --- FONCTION POUR CHARGER ET AFFICHER LES UTILISATEURS ---
+        async function loadUsers() {
+            try {
+                // On appelle l'API en méthode GET pour avoir la liste
+                const response = await fetch("{{ url_for('admins_get') }}");
+                const users = await response.json();
+
+                usersTableBody.innerHTML = ''; // On vide le tableau
+
+                if (users.length === 0) {
+                    usersTableBody.innerHTML = '<tr><td colspan="3" class="text-center">Aucun utilisateur trouvé.</td></tr>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    let row = usersTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.nom}</td>
+                        <td>${user.email}</td>
+                    `;
+                });
+            } catch (error) {
+                console.error("Erreur de chargement des utilisateurs:", error);
+                usersTableBody.innerHTML = '<tr><td colspan="3" class="text-center text-danger">Erreur de chargement.</td></tr>';
+            }
+        }
+
+        // --- GESTION DE L'AJOUT D'UN NOUVEL UTILISATEUR ---
+        addUserForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            const nom = document.getElementById('nom').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // On appelle l'API en méthode POST pour créer l'utilisateur
+            const response = await fetch("{{ url_for('admins_get') }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nom, email, password })
+            });
+
+            if (response.ok) {
+                alert('Utilisateur ajouté avec succès !');
+                this.reset(); // On vide le formulaire
+                loadUsers(); // IMPORTANT : On recharge la liste pour voir le nouvel utilisateur !
+            } else {
+                const error = await response.json();
+                alert(`Erreur: ${error.error}`);
+            }
+        });
+
+        // --- APPEL INITIAL ---
+        // On charge la liste des utilisateurs dès que la page est prête.
+        loadUsers();
+    });
+</script>
+{% endblock %}

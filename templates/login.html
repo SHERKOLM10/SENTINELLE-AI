@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr"> <!-- J'ai changé 'en' en 'fr' -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentinelle IA - Connexion</title> <!-- Titre mis à jour -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #338aff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+    }
+
+    h1 {
+      font-size: 64px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    h1 span.point {
+      color: black;
+    }
+
+    p {
+      font-size: 20px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      width: 350px; /* Légèrement élargi pour les messages d'erreur */
+      color: black; /* Le texte à l'intérieur de la boîte doit être noir */
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group svg {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      fill: #888;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 10px 10px 35px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .login-box button {
+      width: 100%;
+      background-color: #338aff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background-color: #2672cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sentinelle IA<span class="point">.</span></h1>
+  <p>Analyse intelligente des événements de sécurité, en temps réel</p>
+  <div class="login-box">
+
+    <!-- ===== MODIFICATION 1 : Affichage des messages d'erreur/succès ===== -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <!-- Utilise les classes d'alerte de Bootstrap pour un look propre -->
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" style="font-size: 0.9rem;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- ===== MODIFICATION 2 : Mise à jour du formulaire ===== -->
+    <form method="POST" action="{{ url_for('authentification') }}">
+      <div class="input-group">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zM313.6 288h-16.7c-22.2 10.3-46.9 16-72.9 16s-50.7-5.7-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V422.4c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
+        <!-- Ajout de l'attribut 'name' pour que Flask puisse récupérer la valeur -->
+        <input type="text" placeholder="Username" name="nom_utilisateur" required />
+      </div>
+      <div class="input-group">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 192h-24V128C376 57.3 318.7 0 248 0S120 57.3 120 128v64H96c-35.3 0-64 28.7-64 64v192c0 35.3 28.7 64 64 64H400c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64zM168 128c0-44.1 35.9-80 80-80s80 35.9 80 80v64H168V128z"/></svg>
+        <!-- Ajout de l'attribut 'name' -->
+        <input type="password" placeholder="Password" name="mot_de_passe" required />
+      </div>
+      <button type="submit">Se Connecter</button>
+    </form>
+  </div>
+  <!-- On ajoute le script de Bootstrap pour que les alertes soient cliquables -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

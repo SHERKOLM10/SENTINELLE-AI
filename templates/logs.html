@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Logs Système{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Derniers Logs Capturés</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date de Capture</th>
+                            <th>IP Source</th>
+                            <th>IP Destination</th>
+                            <th>Protocole</th>
+                            <th>Incident Associé</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table-body">
+                        <!-- Contenu généré par JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const response = await fetch("{{ url_for('logs_data') }}");
+        const logs = await response.json();
+        const tableBody = document.getElementById('logs-table-body');
+        tableBody.innerHTML = '';
+        logs.forEach(log => {
+            let row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${log.id}</td>
+                <td>${log.date}</td>
+                <td><code>${log.ip_source}</code></td>
+                <td><code>${log.ip_destination || 'N/A'}</code></td>
+                <td><span class="badge bg-primary bg-opacity-75">${log.protocole}</span></td>
+                <td>${log.incident_id}</td>
+            `;
+        });
+    });
+</script>
+{% endblock %}

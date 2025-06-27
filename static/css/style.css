@@ -1,0 +1,78 @@
+/* static/css/style.css (Version Finale) */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden; /* IMPORTANT : On cache le défilement du body */
+  background-color: #f8f9fa;
+}
+
+#wrapper {
+  display: flex;
+  height: 100vh; /* Le conteneur prend 100% de la hauteur de l'écran */
+}
+
+/* ======================================= */
+/* === STYLE DE LA BARRE LATERALE (SIDEBAR) === */
+/* ======================================= */
+
+#sidebar {
+  min-width: 220px;
+  max-width: 220px;
+  background-color: #212529;
+  transition: margin-left 0.3s ease;
+
+  /* --- CORRECTION POUR LE DÉFILEMENT --- */
+  height: 100vh;          /* La sidebar prend toute la hauteur de l'écran */
+  position: sticky;       /* Elle colle à sa position */
+  top: 0;                 /* Elle se colle en haut de l'écran */
+  overflow-y: auto;       /* Si le menu est très long, une barre de défilement apparaîtra DANS le menu */
+  /* ------------------------------------ */
+}
+
+/* ======================================= */
+/* == STYLE DU CONTENU DE LA PAGE == */
+/* ======================================= */
+
+#page-content-wrapper {
+  flex-grow: 1;
+  width: 100%;
+  padding: 0; /* On retire le padding pour que le contenu interne le gère */
+
+  /* --- CORRECTION POUR LE DÉFILEMENT --- */
+  height: 100vh;          /* Le conteneur de contenu prend toute la hauteur de l'écran */
+  overflow-y: auto;       /* C'est LUI qui aura la barre de défilement principale */
+  /* ------------------------------------ */
+}
+
+/* On ajoute un padding interne au contenu pour l'espacement */
+.content-padding {
+    padding: 20px;
+}
+
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  overflow: hidden;
+}
+
+
+
+#menu-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -220px;
+  }
+  #wrapper.toggled #sidebar {
+    margin-left: 0;
+  }
+  #menu-toggle {
+      display: block;
+  }
+}

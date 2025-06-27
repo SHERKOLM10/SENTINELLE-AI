@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Incidents de Sécurité{% endblock %}
+{% block content %}
+<div class="container-fluid p-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Incidents de Vulnérabilité Détectés</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID Scan</th>
+                            <th>Date</th>
+                            <th>IP Cible</th>
+                            <th>Gravité</th>
+                            <th>Catégorie</th>
+                            <th>Description Technique</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+                        <!-- Le contenu sera généré par JavaScript ici -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const response = await fetch("{{ url_for('incidents_data') }}");
+            if (!response.ok) throw new Error('Erreur réseau');
+
+            const data = await response.json();
+            const tableBody = document.getElementById('data-table-body');
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Aucun incident à afficher.</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                let row = tableBody.insertRow();
+
+                // On choisit la couleur du badge en fonction de la gravité
+                let graviteBadgeClass = '';
+                if (item.gravite === 1) {
+                    graviteBadgeClass = 'badge bg-danger'; // Critique
+                } else {
+                    graviteBadgeClass = 'badge bg-warning text-dark'; // Modéré (Gravité 2)
+                }
+
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.date}</td>
+                    <td><code>${item.ip_source}</code></td>
+                    <td><span class="${graviteBadgeClass}">${item.gravite}</span></td>
+                    <td>${item.categorie}</td>
+                    <td>${item.description}</td>
+                `;
+            });
+        } catch (error) {
+            console.error("Erreur de chargement des incidents:", error);
+            const tableBody = document.getElementById('data-table-body');
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Erreur de chargement des données.</td></tr>';
+        }
+    });
+</script>
+{% endblock %}

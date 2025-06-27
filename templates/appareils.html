@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}Appareils Connectés{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Appareils Détectés sur le Réseau</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Adresse IP</th>
+                            <th>Adresse MAC</th>
+                            <th>Type d'appareil</th>
+                            <th>OS</th>
+                            <th>Statut</th>
+                            <th>Dernière Activité</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appareils-table-body">
+                        <!-- Contenu généré par JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const response = await fetch("{{ url_for('appareils_data') }}");
+        const appareils = await response.json();
+        const tableBody = document.getElementById('appareils-table-body');
+        tableBody.innerHTML = '';
+        appareils.forEach(app => {
+            let row = tableBody.insertRow();
+            let statusBadge = app.statut === 'actif' ? 'badge bg-success' : 'badge bg-secondary';
+            row.innerHTML = `
+                <td><code>${app.ip}</code></td>
+                <td><code>${app.mac || 'N/A'}</code></td>
+                <td>${app.type || 'Inconnu'}</td>
+                <td><small>${app.empreinte_os || 'N/A'}</small></td>
+                <td><span class="${statusBadge}">${app.statut}</span></td>
+                <td>${app.derniere_activite}</td>
+            `;
+        });
+    });
+</script>
+{% endblock %}

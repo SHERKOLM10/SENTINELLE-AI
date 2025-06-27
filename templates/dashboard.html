@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard de Sécurité{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <h2 class="text-center mb-4">Dashboard de Sécurité</h2>
+    <div class="row text-center mb-4">
+        <div class="col-md-4 mb-3"><div class="card p-3 shadow-sm h-100"><h3 class="text-primary" id="total-incidents">...</h3><p class="mb-0">Incidents Totaux</p></div></div>
+        <div class="col-md-4 mb-3"><div class="card p-3 shadow-sm h-100"><h3 class="text-danger" id="critiques-incidents">...</h3><p class="mb-0">Incidents Critiques</p></div></div>
+        <div class="col-md-4 mb-3"><div class="card p-3 shadow-sm h-100"><h3 class="text-info" id="faibles-incidents">...</h3><p class="mb-0">Incidents Faibles</p></div></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-7 mb-4"><div class="card p-3 shadow-sm h-100"><h5 class="text-center">Nombre d'incidents par heure</h5><canvas id="barChart" style="min-height: 250px;"></canvas></div></div>
+        <div class="col-lg-5 mb-4"><div class="card p-3 shadow-sm h-100"><h5 class="text-center">Répartition des incidents par catégorie</h5><canvas id="pieChart" style="min-height: 250px;"></canvas></div></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let barChartInstance, pieChartInstance;
+        async function updateDashboard() {
+            try {
+                const response = await fetch("{{ url_for('get_dashboard_data') }}");
+                const data = await response.json();
+                // Mise à jour des cartes KPI
+                document.getElementById('total-incidents').textContent = data.kpi.total;
+                document.getElementById('critiques-incidents').textContent = data.kpi.critiques;
+                document.getElementById('faibles-incidents').textContent = data.kpi.faibles; // Utilisation de la nouvelle clé
+
+                // Mise à jour des graphiques (logique inchangée)
+                const barCtx = document.getElementById('barChart').getContext('2d');
+                if (barChartInstance) barChartInstance.destroy();
+                barChartInstance = new Chart(barCtx, { type: 'bar', data: { labels: data.bar_chart.labels, datasets: [{ label: 'Incidents', data: data.bar_chart.data, backgroundColor: 'rgba(54, 162, 235, 0.6)' }] }, options: { scales: { y: { beginAtZero: true } } } });
+                const pieCtx = document.getElementById('pieChart').getContext('2d');
+                if (pieChartInstance) pieChartInstance.destroy();
+                pieChartInstance = new Chart(pieCtx, { type: 'pie', data: { labels: data.pie_chart.labels, datasets: [{ data: data.pie_chart.data, backgroundColor: ['rgb(217, 83, 79)', 'rgb(54, 162, 235)', 'rgb(46, 204, 113)', 'rgb(241, 196, 15)', 'rgb(108, 117, 125)'] }] } });
+            } catch (error) { console.error("Erreur de mise à jour du dashboard:", error); }
+        }
+        updateDashboard();
+        setInterval(updateDashboard, 60000);
+    });
+</script>
+{% endblock %}
