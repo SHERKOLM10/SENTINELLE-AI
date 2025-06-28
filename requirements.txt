@@ -1,0 +1,28 @@
+# Framework Web
+Flask==3.0.3
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.30
+
+# Moteur de template (généralement inclus avec Flask)
+Jinja2==3.1.4
+
+# Sécurité et mots de passe
+Werkzeug==3.0.3
+passlib==1.7.4 # Alternative/complément pour la sécurité
+
+# Variables d'environnement
+python-dotenv==1.0.1
+
+# Connecteur de base de données MariaDB/MySQL
+mysql-connector-python==8.4.0
+
+# API pour l'IA (Groq utilise le client OpenAI)
+openai==1.35.3
+
+# Scripts réseau
+scapy==2.5.0
+psutil==5.9.8
+
+# Connecteur direct MariaDB (utilisé dans vos scripts autonomes)
+mariadb==1.1.9

@@ -1,5 +1,5 @@
-# DATE : 13/03/2025
-# AUTEUR : NADHON ET POZOU 
+# DATE : 13/05/2025
+# AUTEUR : NADHON David ET POZOU Ewaba Emmmanuel
 # BUT : CREATION D'UNE BASE DE DONNEES POUR LE PROJET DE GESTION de LA SURVIELLNCE RESEAUX 
 
 print(" Le script DataBase.py démarre...")
@@ -18,12 +18,18 @@ class BaseDonnees:
         Constructeur de la classe BaseDonnees.
         """
         try:
+            db_user = os.environ.get('DB_USER')
+            db_password = os.environ.get('DB_PASSWORD')
+            db_host = os.environ.get('DB_HOST')
+            db_port = int(os.environ.get('DB_PORT'))
+
             self.connexion = mariadb.connect(
-                user='root',
-                password='',
-                host='127.0.0.1',
-                port=3308,
-                )
+                user=db_user,
+                password=db_password,
+                host=db_host,
+                port=db_port,
+            )
+
             self.cursor = self.connexion.cursor()
             print("connexion à MariaDB reussie ")
             self.CREATE_DB()
@@ -132,7 +138,6 @@ class BaseDonnees:
                 message_utilisateur TEXT NOT NULL,
                 reponse_chatbot TEXT NOT NULL,
                 utilisateur_id INT,
-                -- CORRECTION: La table de référence est 'admin', pas 'users'.
                 CONSTRAINT fk_chatbot_admin FOREIGN KEY (utilisateur_id) REFERENCES admin(id)
                     ON DELETE SET NULL ON UPDATE CASCADE
             ) ENGINE=InnoDB"""

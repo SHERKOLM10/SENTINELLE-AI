@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container-fluid p-4">
-    <!-- Section pour ajouter un utilisateur -->
+
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-transparent border-0 pt-4">
             <h5 class="card-title">Ajouter un nouvel administrateur</h5>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <!-- Section pour lister les utilisateurs existants -->
+
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h5 class="card-title mb-4">Utilisateurs existants</h5>
@@ -43,7 +43,7 @@
                             <th>Email</th>
                         </tr>
                     </thead>
-                    <!-- Le corps du tableau sera rempli dynamiquement par JavaScript -->
+
                     <tbody id="users-table-body">
                         <tr>
                             <td colspan="3" class="text-center">Chargement...</td>
@@ -62,15 +62,14 @@
         const addUserForm = document.getElementById('add-user-form');
         const usersTableBody = document.getElementById('users-table-body');
 
-        // --- FONCTION POUR CHARGER ET AFFICHER LES UTILISATEURS ---
+
         async function loadUsers() {
             try {
-                // On appelle l'API en méthode GET pour avoir la liste
+
                 const response = await fetch("{{ url_for('admins_get') }}");
                 const users = await response.json();
 
-                usersTableBody.innerHTML = ''; // On vide le tableau
-
+                usersTableBody.innerHTML = '';
                 if (users.length === 0) {
                     usersTableBody.innerHTML = '<tr><td colspan="3" class="text-center">Aucun utilisateur trouvé.</td></tr>';
                     return;
@@ -90,15 +89,15 @@
             }
         }
 
-        // --- GESTION DE L'AJOUT D'UN NOUVEL UTILISATEUR ---
+
         addUserForm.addEventListener('submit', async function(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
+            event.preventDefault();
 
             const nom = document.getElementById('nom').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // On appelle l'API en méthode POST pour créer l'utilisateur
+
             const response = await fetch("{{ url_for('admins_get') }}", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -107,16 +106,15 @@
 
             if (response.ok) {
                 alert('Utilisateur ajouté avec succès !');
-                this.reset(); // On vide le formulaire
-                loadUsers(); // IMPORTANT : On recharge la liste pour voir le nouvel utilisateur !
+                this.reset();
+                loadUsers();
             } else {
                 const error = await response.json();
                 alert(`Erreur: ${error.error}`);
             }
         });
 
-        // --- APPEL INITIAL ---
-        // On charge la liste des utilisateurs dès que la page est prête.
+
         loadUsers();
     });
 </script>

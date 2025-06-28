@@ -3,7 +3,6 @@
 {% block title %}Assistant IA{% endblock %}
 
 {% block content %}
-<!-- Le style CSS pour la fenêtre de chat -->
 <style>
     #chat-window { height: 70vh; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; }
     .message { margin-bottom: 1rem; display: flex; flex-direction: column; }
@@ -14,20 +13,18 @@
     .message.ia .bubble { background-color: #f0f2f5; color: black; border: 1px solid #e0e0e0; }
 </style>
 
-<!-- La structure HTML de la page -->
+
 <div class="container-fluid p-4">
     <div class="card shadow-sm border-0">
         <div class="card-body d-flex flex-column" style="height: 85vh;">
             <h5 class="card-title mb-3">IA Assistante</h5>
 
-            <!-- La fenêtre où les messages apparaissent -->
             <div id="chat-window" class="bg-white mb-3 flex-grow-1">
                 <div class="message ia">
                     <div class="bubble">Bonjour, je suis Sentinelle IA. Comment puis-je vous aider aujourd'hui ? (Ex: "Lance un scan de ports sur 192.168.1.1" ou "Donne-moi des conseils sur la mitigation des ransomwares".)</div>
                 </div>
             </div>
 
-            <!-- Le formulaire pour envoyer un message -->
             <form id="chat-form" class="mt-auto">
                 <div class="input-group">
                     <input type="text" id="message-input" class="form-control" placeholder="Posez une question ou demandez une action..." required autocomplete="off">
@@ -41,7 +38,7 @@
 </div>
 {% endblock %}
 
-<!-- Votre bloc de script est ici, intact -->
+
 {% block scripts %}
 <script>
     const chatWindow = document.getElementById('chat-window');
@@ -56,12 +53,11 @@
         const bubbleDiv = document.createElement('div');
         bubbleDiv.className = 'bubble';
 
-        // Gère les sauts de ligne et le formatage de base
         bubbleDiv.innerHTML = text.replace(/\n/g, '<br>');
 
         messageDiv.appendChild(bubbleDiv);
         chatWindow.appendChild(messageDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Fait défiler jusqu'en bas
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
     chatForm.addEventListener('submit', async function(e) {
@@ -74,7 +70,7 @@
         messageInput.disabled = true;
         sendButton.disabled = true;
 
-        // Affiche une bulle de chargement
+
         const loadingBubble = document.createElement('div');
         loadingBubble.className = 'message ia';
         loadingBubble.innerHTML = `<div class="bubble">...</div>`;
@@ -90,14 +86,14 @@
 
             const data = await response.json();
 
-            // Remplace le contenu de la bulle de chargement par la vraie réponse
+
             loadingBubble.querySelector('.bubble').innerHTML = data.reply.replace(/\n/g, '<br>');
 
         } catch (error) {
             console.error("Erreur de communication avec l'assistant:", error);
             loadingBubble.querySelector('.bubble').innerHTML = "Désolé, une erreur de communication est survenue.";
         } finally {
-            // Réactive la barre de saisie et le bouton
+
             messageInput.disabled = false;
             sendButton.disabled = false;
             messageInput.focus();

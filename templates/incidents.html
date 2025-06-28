@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody id="data-table-body">
-                        <!-- Le contenu sera généré par JavaScript ici -->
+
                     </tbody>
                 </table>
             </div>
@@ -46,12 +46,12 @@
             data.forEach(item => {
                 let row = tableBody.insertRow();
 
-                // On choisit la couleur du badge en fonction de la gravité
+
                 let graviteBadgeClass = '';
                 if (item.gravite === 1) {
-                    graviteBadgeClass = 'badge bg-danger'; // Critique
+                    graviteBadgeClass = 'badge bg-danger';
                 } else {
-                    graviteBadgeClass = 'badge bg-warning text-dark'; // Modéré (Gravité 2)
+                    graviteBadgeClass = 'badge bg-warning text-dark';
                 }
 
                 row.innerHTML = `

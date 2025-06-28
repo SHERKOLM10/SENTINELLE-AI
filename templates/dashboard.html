@@ -25,12 +25,10 @@
             try {
                 const response = await fetch("{{ url_for('get_dashboard_data') }}");
                 const data = await response.json();
-                // Mise à jour des cartes KPI
                 document.getElementById('total-incidents').textContent = data.kpi.total;
                 document.getElementById('critiques-incidents').textContent = data.kpi.critiques;
                 document.getElementById('faibles-incidents').textContent = data.kpi.faibles; // Utilisation de la nouvelle clé
 
-                // Mise à jour des graphiques (logique inchangée)
                 const barCtx = document.getElementById('barChart').getContext('2d');
                 if (barChartInstance) barChartInstance.destroy();
                 barChartInstance = new Chart(barCtx, { type: 'bar', data: { labels: data.bar_chart.labels, datasets: [{ label: 'Incidents', data: data.bar_chart.data, backgroundColor: 'rgba(54, 162, 235, 0.6)' }] }, options: { scales: { y: { beginAtZero: true } } } });

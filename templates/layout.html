@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sentinelle IA - {% block title %}{% endblock %}</title>
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-  <!-- Liens CSS et JS externes -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
@@ -13,10 +12,10 @@
 </head>
 <body>
 
-  <!-- Conteneur principal qui gère la mise en page Flexbox -->
+
   <div class="d-flex" id="wrapper">
 
-    <!-- ENFANT 1 : La barre latérale (Sidebar) -->
+
     <nav id="sidebar" class="bg-dark text-white">
       <div class="sidebar-header text-center py-4">
         <h4>🛡️Sentinelle IA</h4>
@@ -32,17 +31,16 @@
       </ul>
     </nav>
 
-    <!-- ENFANT 2 : Le conteneur du contenu principal, qui aura sa propre barre de défilement -->
     <div id="page-content-wrapper" class="bg-light">
 
-      <!-- Barre de navigation supérieure (avec le bouton menu) qui restera visible au défilement -->
+
       <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom sticky-top">
           <div class="container-fluid">
               <button class="btn btn-primary" id="menu-toggle">☰ Menu</button>
           </div>
       </nav>
 
-      <!-- Conteneur pour le contenu avec un padding interne -->
+
       <div class="content-padding">
         {% block content %}{% endblock %}
       </div>
@@ -50,10 +48,10 @@
     </div>
   </div>
 
-  <!-- Bloc pour les scripts spécifiques à chaque page -->
+
   {% block scripts %}{% endblock %}
 
-  <!-- Script global pour le bouton menu (doit être sur toutes les pages) -->
+
   <script>
     document.getElementById("menu-toggle").addEventListener("click", function(e) {
         e.preventDefault();
